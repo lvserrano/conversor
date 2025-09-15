@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conversor de Moedas - MuApp</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/conversor.css">
+  <link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon">
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Inter Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="background-pattern"></div>
+
+  <div class="container">
+    <header>
+      <div class="header-nav">
+        <a href="https://muapp.com.br" class="back-btn">
+          <i class="fas fa-arrow-left"></i>
+          Voltar
+        </a>
+        <div class="logo">MuApp</div>
+      </div>
+      <div class="page-title">Conversor de Moedas</div>
+      <div class="page-subtitle">Converta entre diferentes moedas com taxas atualizadas em tempo real</div>
+    </header>
+
+    <div class="main-content">
+      <!-- Conversor Principal -->
+      <section class="section converter-section">
+        <div class="converter-container">
+          <!-- Moeda Origem -->
+          <div class="currency-input">
+            <label class="input-label">De:</label>
+            <div class="input-group">
+              <select class="currency-select" id="fromCurrency">
+                <option value="USD">USD - Dólar Americano</option>
+                <option value="EUR">EUR - Euro</option>
+                <option value="BRL" selected>BRL - Real Brasileiro</option>
+                <option value="GBP">GBP - Libra Esterlina</option>
+                <option value="JPY">JPY - Iene Japonês</option>
+                <option value="CAD">CAD - Dólar Canadense</option>
+                <option value="AUD">AUD - Dólar Australiano</option>
+                <option value="CHF">CHF - Franco Suíço</option>
+                <option value="CNY">CNY - Yuan Chinês</option>
+                <option value="INR">INR - Rupia Indiana</option>
+                <option value="KRW">KRW - Won Sul-Coreano</option>
+                <option value="MXN">MXN - Peso Mexicano</option>
+                <option value="SGD">SGD - Dólar de Singapura</option>
+                <option value="NZD">NZD - Dólar Neozelandês</option>
+                <option value="NOK">NOK - Coroa Norueguesa</option>
+                <option value="SEK">SEK - Coroa Sueca</option>
+                <option value="RUB">RUB - Rublo Russo</option>
+                <option value="ZAR">ZAR - Rand Sul-Africano</option>
+                <option value="TRY">TRY - Lira Turca</option>
+                <option value="ARS">ARS - Peso Argentino</option>
+              </select>
+              <input type="number" class="amount-input" id="fromAmount" placeholder="0,00" step="0.01" min="0">
+            </div>
+          </div>
+
+          <!-- Botão de Inversão -->
+          <div class="swap-container">
+            <button class="swap-btn" id="swapBtn" title="Inverter moedas">
+              <i class="fas fa-exchange-alt"></i>
+            </button>
+          </div>
+
+          <!-- Moeda Destino -->
+          <div class="currency-input">
+            <label class="input-label">Para:</label>
+            <div class="input-group">
+              <select class="currency-select" id="toCurrency">
+                <option value="USD" selected>USD - Dólar Americano</option>
+                <option value="EUR">EUR - Euro</option>
+                <option value="BRL">BRL - Real Brasileiro</option>
+                <option value="GBP">GBP - Libra Esterlina</option>
+                <option value="JPY">JPY - Iene Japonês</option>
+                <option value="CAD">CAD - Dólar Canadense</option>
+                <option value="AUD">AUD - Dólar Australiano</option>
+                <option value="CHF">CHF - Franco Suíço</option>
+                <option value="CNY">CNY - Yuan Chinês</option>
+                <option value="INR">INR - Rupia Indiana</option>
+                <option value="KRW">KRW - Won Sul-Coreano</option>
+                <option value="MXN">MXN - Peso Mexicano</option>
+                <option value="SGD">SGD - Dólar de Singapura</option>
+                <option value="NZD">NZD - Dólar Neozelandês</option>
+                <option value="NOK">NOK - Coroa Norueguesa</option>
+                <option value="SEK">SEK - Coroa Sueca</option>
+                <option value="RUB">RUB - Rublo Russo</option>
+                <option value="ZAR">ZAR - Rand Sul-Africano</option>
+                <option value="TRY">TRY - Lira Turca</option>
+                <option value="ARS">ARS - Peso Argentino</option>
+              </select>
+              <input type="text" class="amount-input" id="toAmount" placeholder="0,00" readonly>
+            </div>
+          </div>
+        </div>
+
+        <!-- Taxa e Info -->
+        <div class="conversion-info">
+          <div class="rate-display" id="rateDisplay">
+            <i class="fas fa-chart-line"></i>
+            <span>Selecione as moedas para ver a taxa</span>
+          </div>
+          <div class="last-update" id="lastUpdate">
+            <i class="fas fa-clock"></i>
+            <span>Aguardando dados...</span>
+          </div>
+        </div>
+
+        <!-- Status de Loading -->
+        <div class="loading-status" id="loadingStatus" style="display: none;">
+          <div class="loading-spinner"></div>
+          <span>Atualizando taxas...</span>
+        </div>
+
+        <!-- Status de Erro -->
+        <div class="error-status" id="errorStatus" style="display: none;">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span>Erro ao carregar taxas. Tente novamente.</span>
+          <button class="retry-btn" id="retryBtn">Tentar Novamente</button>
+        </div>
+      </section>
+
+      <!-- Informações Adicionais -->
+      <section class="section info-section">
+        <h2 class="section-title">
+          <div class="section-icon"><i class="fas fa-info-circle"></i></div>
+          Sobre o Conversor
+        </h2>
+        <div class="info-grid">
+          <div class="info-card">
+            <div class="info-icon"><i class="fas fa-sync-alt"></i></div>
+            <div class="info-title">Taxas em Tempo Real</div>
+            <div class="info-description">As taxas de câmbio são atualizadas automaticamente para garantir conversões precisas.</div>
+          </div>
+          <div class="info-card">
+            <div class="info-icon"><i class="fas fa-shield-alt"></i></div>
+            <div class="info-title">Dados Confiáveis</div>
+            <div class="info-description">Utilizamos fontes confiáveis para obter as taxas de câmbio mais atuais do mercado.</div>
+          </div>
+          <div class="info-card">
+            <div class="info-icon"><i class="fas fa-globe"></i></div>
+            <div class="info-title">20 Moedas Principais</div>
+            <div class="info-description">Suporte às principais moedas mundiais para suas necessidades de conversão.</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      <div class="footer-links">
+        <a href="#sobre">Sobre</a>
+        <a href="#contato">Contato</a>
+        <a href="#privacidade">Privacidade</a>
+        <a href="#termos">Termos de Uso</a>
+      </div>
+      <p>&copy; 2025 MuApp.com.br - Todos os direitos reservados</p>
+    </footer>
+  </div>
+
+  <script src="assets/js/conversor.js"></script>
+</body>
+
+</html>
