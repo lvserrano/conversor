@@ -89,6 +89,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  position: relative;
 }
 
 .currency-select {
@@ -122,7 +123,7 @@
   box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
-/* Amount Input - Estilização das setas */
+/* Amount Input - Removendo as setas padrão do browser */
 .amount-input {
   background: rgba(45, 55, 72, 0.4);
   backdrop-filter: blur(8px);
@@ -134,58 +135,23 @@
   font-weight: 600;
   text-align: center;
   transition: all var(--transition-fast);
-}
-
-/* Adiciona setas customizadas */
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
   position: relative;
 }
 
-.input-group:has(.amount-input) {
-  position: relative;
+/* Remove as setas padrão do input number */
+.amount-input::-webkit-outer-spin-button,
+.amount-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-.input-group:has(.amount-input):after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: 12px;
-  width: 0;
-  height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-bottom: 8px solid var(--text-tertiary);
-  transform: translateY(-70%);
-  pointer-events: none;
-  z-index: 1;
+.amount-input[type="number"] {
+  -moz-appearance: textfield;
 }
 
+.input-group:has(.amount-input):after,
 .input-group:has(.amount-input):before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: 12px;
-  width: 0;
-  height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 8px solid var(--text-tertiary);
-  transform: translateY(30%);
-  pointer-events: none;
-  z-index: 1;
-}
-
-.input-group:has(.amount-input:hover):after,
-.input-group:has(.amount-input:focus):after {
-  border-bottom-color: var(--brand-primary);
-}
-
-.input-group:has(.amount-input:hover):before,
-.input-group:has(.amount-input:focus):before {
-  border-top-color: var(--brand-primary);
+  display: none !important;
 }
 
 .amount-input:hover {
@@ -202,12 +168,6 @@
 .amount-input[readonly] {
   cursor: default;
   background: rgba(45, 55, 72, 0.2);
-}
-
-/* Remove setas do campo readonly */
-.input-group:has(.amount-input[readonly]):after,
-.input-group:has(.amount-input[readonly]):before {
-  display: none;
 }
 
 .amount-input::placeholder {

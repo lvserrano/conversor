@@ -61,6 +61,7 @@ class CurrencyConverter {
       const baseCurrency = this.fromCurrency.value;
       await this.fetchRates(baseCurrency);
 
+      // Só chama convert e updateRateDisplay depois que os dados foram carregados
       this.convert();
       this.showLoading(false);
     } catch (error) {
@@ -84,6 +85,7 @@ class CurrencyConverter {
       }
 
       this.rates = data.rates;
+      this.currentBaseCurrency = baseCurrency;
       this.lastUpdate = new Date(data.date);
       this.updateLastUpdateDisplay();
     } catch (error) {
@@ -97,10 +99,13 @@ class CurrencyConverter {
     const fromCurr = this.fromCurrency.value;
     const toCurr = this.toCurrency.value;
 
-    // Limpa resultado se não há valor
+    // Se não há valor, limpa resultado mas ainda mostra a taxa
     if (!amount || amount <= 0) {
       this.toAmount.value = "";
-      this.updateRateDisplay(fromCurr, toCurr);
+      // Só atualiza o rate display se já temos as taxas carregadas
+      if (this.rates && Object.keys(this.rates).length > 0) {
+        this.updateRateDisplay(fromCurr, toCurr);
+      }
       return;
     }
 
@@ -113,7 +118,6 @@ class CurrencyConverter {
       ) {
         this.showLoading(true);
         await this.fetchRates(fromCurr);
-        this.currentBaseCurrency = fromCurr;
         this.showLoading(false);
       }
 
@@ -130,7 +134,6 @@ class CurrencyConverter {
           // Se não encontrou a taxa, força nova busca
           this.showLoading(true);
           await this.fetchRates(fromCurr);
-          this.currentBaseCurrency = fromCurr;
           rate = this.rates[toCurr];
           this.showLoading(false);
         }
@@ -174,7 +177,7 @@ class CurrencyConverter {
     await this.convert();
   }
 
-  updateRateDisplay(fromCurr, toCurr, rate) {
+  updateRateDisplay(fromCurr, toCurr, rate = null) {
     if (!fromCurr || !toCurr) {
       this.rateDisplay.innerHTML = `
         <i class="fas fa-chart-line"></i>
@@ -183,7 +186,12 @@ class CurrencyConverter {
       return;
     }
 
-    if (!rate || fromCurr === toCurr) {
+    // Se rate não foi fornecido, tenta pegar das taxas carregadas
+    if (rate === null && this.rates && fromCurr !== toCurr) {
+      rate = this.rates[toCurr];
+    }
+
+    if (!rate || rate === null || fromCurr === toCurr) {
       this.rateDisplay.innerHTML = `
         <i class="fas fa-chart-line"></i>
         <span>1 ${fromCurr} = 1 ${toCurr}</span>
@@ -281,29 +289,29 @@ class CurrencyConverter {
   }
 }
 
-// Função auxiliar para obter símbolo da moeda
+// Função auxiliar para obter símbolo da moeda (CORRIGIDA)
 function getCurrencySymbol(currency) {
   const symbols = {
-    USD: "",
-    EUR: "€",
-    BRL: "R",
-    GBP: "£",
-    JPY: "¥",
-    CAD: "C",
-    AUD: "A",
-    CHF: "CHF",
-    CNY: "¥",
-    INR: "₹",
-    KRW: "₩",
-    MXN: "",
-    SGD: "S",
-    NZD: "NZ",
-    NOK: "kr",
-    SEK: "kr",
-    RUB: "₽",
-    ZAR: "R",
-    TRY: "₺",
-    ARS: "",
+    USD: "$", // Dólar americano
+    EUR: "€", // Euro
+    BRL: "R$", // Real brasileiro
+    GBP: "£", // Libra esterlina
+    JPY: "¥", // Iene japonês
+    CAD: "C$", // Dólar canadense
+    AUD: "A$", // Dólar australiano
+    CHF: "CHF", // Franco suíço
+    CNY: "¥", // Yuan chinês
+    INR: "₹", // Rupia indiana
+    KRW: "₩", // Won sul-coreano
+    MXN: "$", // Peso mexicano
+    SGD: "S$", // Dólar de Singapura
+    NZD: "NZ$", // Dólar neozelandês
+    NOK: "kr", // Coroa norueguesa
+    SEK: "kr", // Coroa sueca
+    RUB: "₽", // Rublo russo
+    ZAR: "R", // Rand sul-africano
+    TRY: "₺", // Lira turca
+    ARS: "$", // Peso argentino
   };
   return symbols[currency] || currency;
 }
