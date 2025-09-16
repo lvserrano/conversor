@@ -145,10 +145,6 @@
   margin: 0;
 }
 
-.amount-input[type="number"] {
-  -moz-appearance: textfield;
-}
-
 .input-group:has(.amount-input):after,
 .input-group:has(.amount-input):before {
   display: none !important;
